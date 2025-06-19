@@ -10,8 +10,14 @@
     <div id="messages"></div>
   </div>
   <form id="input-form">
-    <input id="input" placeholder="Type your message" autocomplete="off" />
-    <button type="submit">Send</button>
+    <div id="input-container">
+      <input id="input" placeholder="Type your message" autocomplete="off" />
+      <button id="send-button" type="submit" aria-label="Send">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="icon">
+          <path d="M8.99992 10V6.41407L5.70696 9.70704C5.31643 10.0976 4.68342 10.0976 4.29289 9.70704C3.90237 9.31652 3.90237 8.68345 4.29289 8.29291L8.29289 4.29291C8.68342 3.90238 9.31649 3.90238 9.70701 4.29291L13.707 8.29291C14.0976 8.68344 14.0976 9.31651 13.707 9.70703C13.3165 10.0976 12.6834 10.0976 12.2929 9.70703L8.99992 6.41407V10Z"/>
+        </svg>
+      </button>
+    </div>
     <button id="stop-button" type="button" disabled>Stop</button>
   </form>
   <script src="script.js"></script>
