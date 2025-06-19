@@ -1,0 +1,81 @@
+body {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#chat-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: 4rem; /* space for input */
+}
+
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+
+.user {
+  background-color: #2e2e2e;
+  align-self: flex-end;
+}
+
+.bot {
+  background-color: #333333;
+  align-self: flex-start;
+}
+
+#input-form {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  display: flex;
+  justify-content: center;
+}
+
+#input-form input {
+  max-width: 700px;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #2b2b2b;
+  color: #e0e0e0;
+}
+
+#input-form button {
+  margin-left: 0.5rem;
+  padding: 0 1rem;
+  background-color: #444;
+  color: #e0e0e0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 1px;
+  background-color: #e0e0e0;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}

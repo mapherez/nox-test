@@ -36,6 +36,16 @@ async function ask(prompt) {
   });
 }
 
+async function askStream(prompt, onToken) {
+  // Fallback streaming implementation using full response
+  const text = await ask(prompt);
+  for (const char of text) {
+    onToken(char);
+    await new Promise((r) => setTimeout(r, 0));
+  }
+  return text;
+}
+
 function loadMemory() {
   const memPath = path.join(__dirname, 'memory.json');
   if (!fs.existsSync(memPath)) {
@@ -55,15 +65,27 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/chat', async (req, res) => {
+  res.set({
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
+  });
+  res.flushHeaders();
+
   const userMsg = req.body.message;
   memory.nodes.push({ id: Date.now(), text: userMsg, links: [] });
   saveMemory(memory);
 
-  const response = await ask(userMsg);
-  memory.nodes.push({ id: Date.now() + 1, text: response, links: [] });
+  let full = '';
+  await askStream(userMsg, (token) => {
+    full += token;
+    res.write(`data: ${token}\n\n`);
+  });
+  memory.nodes.push({ id: Date.now() + 1, text: full, links: [] });
   saveMemory(memory);
 
-  res.json({ reply: response });
+  res.write('data: [DONE]\n\n');
+  res.end();
 });
 
 app.post('/index', async (req, res) => {
