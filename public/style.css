@@ -39,6 +39,22 @@ body {
   text-align: justify;
 }
 
+.thinking {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.thinking::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background: #999;
+  animation: blink 1s infinite;
+}
+
 #input-form {
   position: fixed;
   bottom: 0;

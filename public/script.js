@@ -14,6 +14,7 @@ function addMessage(role, text) {
 async function sendMessage(msg) {
   const userDiv = addMessage('user', msg);
   const botDiv = addMessage('bot', '');
+  botDiv.classList.add('thinking');
 
   const res = await fetch('/chat', {
     method: 'POST',
@@ -40,6 +41,11 @@ async function sendMessage(msg) {
             done = true;
             break;
           }
+
+          if (botDiv.classList.contains('thinking')) {
+            botDiv.classList.remove('thinking');
+          }
+
           botText += data;
           botDiv.innerHTML = botText + '<span class="cursor"></span>';
           messagesEl.scrollTop = messagesEl.scrollHeight;
