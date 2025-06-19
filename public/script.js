@@ -44,34 +44,22 @@ async function sendMessage(msg) {
 
   const reader = res.body.getReader();
   const decoder = new TextDecoder('utf-8');
-  let buffer = '';
   let done = false;
 
   try {
     while (!done) {
       const { value, done: readerDone } = await reader.read();
       if (value) {
-        buffer += decoder.decode(value, { stream: true });
-        let lines = buffer.split('\n\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (line.startsWith('data:')) {
-            const data = line.slice(6);
-            if (data === '[DONE]') {
-              done = true;
-              break;
-            }
-            botText += data;
-            botDiv.innerHTML = botText + '<span class="cursor"></span>';
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-          }
-        }
+        botText += decoder.decode(value, { stream: !readerDone });
+        botDiv.innerHTML = botText + '<span class="cursor"></span>';
+        messagesEl.scrollTop = messagesEl.scrollHeight;
       }
-      if (readerDone) break;
+      done = readerDone;
     }
   } catch (err) {
     if (!controller.signal.aborted) throw err;
   }
+  botText += decoder.decode();
   botDiv.textContent = botText;
   messagesEl.scrollTop = messagesEl.scrollHeight;
   stopButton.disabled = true;
