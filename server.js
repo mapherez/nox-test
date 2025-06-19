@@ -67,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/chat', async (req, res) => {
   res.set({
-    'Content-Type': 'text/event-stream',
+    'Content-Type': 'text/plain',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
   });
@@ -86,7 +86,7 @@ app.post('/chat', async (req, res) => {
     (token) => {
       full += token;
       if (!controller.signal.aborted) {
-        res.write(`data: ${token}\n\n`);
+        res.write(token);
       }
     },
     controller.signal
@@ -95,7 +95,6 @@ app.post('/chat', async (req, res) => {
   if (!controller.signal.aborted) {
     memory.nodes.push({ id: Date.now() + 1, text: full, links: [] });
     saveMemory(memory);
-    res.write('data: [DONE]\n\n');
     res.end();
   }
 });
