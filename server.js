@@ -2,48 +2,38 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs-extra');
-const { LLM } = require('llama-node');
-const { LLamaCpp } = require('llama-node/dist/llm/llama-cpp.cjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const MODEL_PATH = path.join(__dirname, 'models', 'ggml-model.bin');
+const MODEL_PATH = path.join(__dirname, 'models', 'mistral-7b.gguf');
 
 let llama;
+let session;
 
 async function loadModel() {
-  llama = new LLM(LLamaCpp);
-  await llama.load({
+  const { getLlama, LlamaChatSession } = await import('node-llama-cpp');
+  llama = await getLlama();
+  const model = await llama.loadModel({
     modelPath: MODEL_PATH,
-    enableLogging: true,
-    nCtx: 2048,
-    nGpuLayers: 0,
-    seed: 0,
-    f16Kv: false,
-    logitsAll: false,
-    vocabOnly: false,
-    useMlock: false,
-    embedding: false,
+    gpuLayers: 0,
     useMmap: true,
   });
+  const context = await model.createContext({
+    contextSize: 2048,
+    threads: 4,
+  });
+  session = new LlamaChatSession({ contextSequence: context.getSequence() });
 }
 
 async function ask(prompt) {
-  let result = '';
-  const params = {
-    prompt,
-    nThreads: 4,
-    nTokPredict: 256,
+  return await session.prompt(prompt, {
+    maxTokens: 256,
     topK: 40,
     topP: 0.9,
-    temp: 0.8,
-    repeatPenalty: 1,
-  };
-  await llama.createCompletion(params, (resp) => {
-    if (resp.token) result += resp.token;
+    temperature: 0.8,
+    seed: 0,
   });
-  return result.trim();
 }
 
 function loadMemory() {
