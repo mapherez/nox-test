@@ -35,7 +35,7 @@ async function sendMessage(msg) {
       buffer = lines.pop();
       for (const line of lines) {
         if (line.startsWith('data:')) {
-          const data = line.slice(5).trim();
+          const data = line.slice(6);
           if (data === '[DONE]') {
             done = true;
             break;
