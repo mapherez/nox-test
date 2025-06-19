@@ -66,6 +66,18 @@ body {
   cursor: pointer;
 }
 
+#stop-button {
+  background-color: transparent;
+  border: 1px solid #ff5555;
+  color: #ff5555;
+  display: none;
+}
+
+#stop-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 @keyframes blink {
   0% { opacity: 1; }
   50% { opacity: 0; }
