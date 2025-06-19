@@ -82,11 +82,12 @@ body {
   justify-content: center;
   border-radius: 50%;
   cursor: pointer;
-  color: #e0e0e0;
+  color: black;
+  background-color: white;
 }
 
 #send-button:hover {
-  background-color: #444;
+  opacity: 0.7;
 }
 
 #stop-button {
