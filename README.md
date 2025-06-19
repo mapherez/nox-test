@@ -1,6 +1,6 @@
 # NOX – Local AI Agent
 
-NOX is a simple local AI agent that runs entirely on your machine. It uses [llama.cpp](https://github.com/ggerganov/llama.cpp) via the `llama-node` package and provides a small web interface.
+NOX is a simple local AI agent that runs entirely on your machine. It uses [llama.cpp](https://github.com/ggerganov/llama.cpp) via the `node-llama-cpp` package and provides a small web interface.
 
 ## Features
 
@@ -19,12 +19,12 @@ NOX is a simple local AI agent that runs entirely on your machine. It uses [llam
 npm install
 ```
 
-3. **Download a llama.cpp model.** You can use a model like Mistral or LLaMA in `ggml` format. Place the model file at `models/ggml-model.bin` (create the `models` folder if necessary).
+3. **Download a llama.cpp model** in the newer `gguf` format. Place your file at `models/mistral-7b.gguf` (create the `models` folder if needed).
 
    Example for Windows using PowerShell:
    ```powershell
    mkdir models
-   # Copy your model file into models\ggml-model.bin
+   # Copy your GGUF model into models\mistral-7b.gguf
    ```
 
 4. **Run the agent**

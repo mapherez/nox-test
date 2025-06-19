@@ -15,6 +15,6 @@
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
     "fs-extra": "^11.3.0",
-    "llama-node": "^0.1.6"
+    "node-llama-cpp": "^3.10.0"
   }
 }
