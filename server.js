@@ -36,10 +36,11 @@ async function ask(prompt) {
   });
 }
 
-async function askStream(prompt, onToken) {
+async function askStream(prompt, onToken, signal) {
   // Fallback streaming implementation using full response
   const text = await ask(prompt);
   for (const char of text) {
+    if (signal && signal.aborted) break;
     onToken(char);
     await new Promise((r) => setTimeout(r, 0));
   }
@@ -76,16 +77,27 @@ app.post('/chat', async (req, res) => {
   memory.nodes.push({ id: Date.now(), text: userMsg, links: [] });
   saveMemory(memory);
 
-  let full = '';
-  await askStream(userMsg, (token) => {
-    full += token;
-    res.write(`data: ${token}\n\n`);
-  });
-  memory.nodes.push({ id: Date.now() + 1, text: full, links: [] });
-  saveMemory(memory);
+  const controller = new AbortController();
+  req.on('close', () => controller.abort());
 
-  res.write('data: [DONE]\n\n');
-  res.end();
+  let full = '';
+  await askStream(
+    userMsg,
+    (token) => {
+      full += token;
+      if (!controller.signal.aborted) {
+        res.write(`data: ${token}\n\n`);
+      }
+    },
+    controller.signal
+  );
+
+  if (!controller.signal.aborted) {
+    memory.nodes.push({ id: Date.now() + 1, text: full, links: [] });
+    saveMemory(memory);
+    res.write('data: [DONE]\n\n');
+    res.end();
+  }
 });
 
 app.post('/index', async (req, res) => {
