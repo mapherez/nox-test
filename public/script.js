@@ -42,19 +42,13 @@ async function sendMessage(msg) {
     throw err;
   }
 
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  let done = false;
+  const decoder = new TextDecoder();
 
   try {
-    while (!done) {
-      const { value, done: readerDone } = await reader.read();
-      if (value) {
-        botText += decoder.decode(value, { stream: !readerDone });
-        botDiv.innerHTML = botText + '<span class="cursor"></span>';
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-      }
-      done = readerDone;
+    for await (const chunk of res.body) {
+      botText += decoder.decode(chunk, { stream: true });
+      botDiv.innerHTML = botText + '<span class="cursor"></span>';
+      messagesEl.scrollTop = messagesEl.scrollHeight;
     }
   } catch (err) {
     if (!controller.signal.aborted) throw err;

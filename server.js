@@ -67,7 +67,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/chat', async (req, res) => {
   res.set({
-    'Content-Type': 'text/plain',
+    // stream plain text so the frontend can read raw characters
+    'Content-Type': 'text/plain; charset=utf-8',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
   });
