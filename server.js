@@ -16,7 +16,7 @@ async function loadModel() {
   llama = await getLlama();
   const model = await llama.loadModel({
     modelPath: MODEL_PATH,
-    gpuLayers: 0,
+    gpuLayers: 20,
     useMmap: true,
   });
   const context = await model.createContext({
@@ -28,7 +28,7 @@ async function loadModel() {
 
 async function ask(prompt) {
   return await session.prompt(prompt, {
-    maxTokens: 256,
+    maxTokens: 1024,
     topK: 40,
     topP: 0.9,
     temperature: 0.8,

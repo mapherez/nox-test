@@ -13,13 +13,14 @@ NOX is a simple local AI agent that runs entirely on your machine. It uses [llam
 ## Setup
 
 1. **Install Node.js** (v18 or later) and Git for Windows.
-2. Clone this repository and install dependencies:
+2. Clone this repository.
+3. **Install dependencies** (CPU build):
 
 ```bash
 npm install
 ```
 
-3. **Download a llama.cpp model** in the newer `gguf` format. Place your file at `models/mistral-7b.gguf` (create the `models` folder if needed).
+4. **Download a llama.cpp model** in the newer `gguf` format. Place your file at `models/mistral-7b.gguf` (create the `models` folder if needed).
 
    Example for Windows using PowerShell:
    ```powershell
@@ -27,7 +28,18 @@ npm install
    # Copy your GGUF model into models\mistral-7b.gguf
    ```
 
-4. **Run the agent**
+5. **(Optional) Enable GPU acceleration**
+
+   To compile `llama.cpp` with CUDA support you need the CUDA toolkit, Visual Studio Build Tools and CMake installed on Windows 11. Before installing dependencies set `LLAMA_CUBLAS=1` so `node-llama-cpp` builds with cuBLAS:
+
+   ```powershell
+   $env:LLAMA_CUBLAS=1
+   npm install
+   ```
+
+   This compiles the bindings for your GPU (tested with an RTX 3070). When loading the model the server now uses `gpuLayers: 20` to place the first 20 layers on the GPU.
+
+6. **Run the agent**
 
 ```bash
 npm run agent
